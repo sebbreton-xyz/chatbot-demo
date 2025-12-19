@@ -15,7 +15,7 @@ function App() {
     {
       id: 1,
       author: "bot",
-      text: "Bonjour, je suis l’assistant de Sébastien Breton. Que vous recrutiez ou que vous portiez un projet web/IA, je peux vous présenter son profil, ses compétences et discuter de la faisabilité de votre idée.",
+      text: "Bonjour ! Je suis l’assistant de Sébastien Breton. Posez-moi vos questions sur son profil ou décrivez votre projet 👋",
     },
   ]);
   const [input, setInput] = useState("");

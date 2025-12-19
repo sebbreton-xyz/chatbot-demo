@@ -1,4 +1,5 @@
 import os
+
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
@@ -6,31 +7,25 @@ from openai import OpenAI
 
 app = FastAPI(title="Chatbot Demo API")
 
-# --- OpenAI client ---
+# --- OpenAI client et modèle ---
 
-client = OpenAI()  # lit OPENAI_API_KEY depuis les variables d'environnement
+client = (
+    OpenAI()
+)  # lit OPENAI_API_KEY dans les variables d'environnement ajoutées au processus du shell.
 OPENAI_MODEL = "gpt-4.1-nano"
 
-PROFILE_CONTEXT = """
-Tu es un assistant conversationnel qui aide l'utilisateur à comprendre
-le profil et les projets de Sébastien Breton.
+# --- Contexte de profil externalisé ---
 
-Contexte :
-- Développeur web full stack (React/JavaScript, Python en montée en compétence).
-- Expérience sur des projets front/back : par exemple Verdo (MVP éco-tourisme
-  avec React/TypeScript + API Django/DRF + carte Leaflet).
-- Intérêt marqué pour les chatbots, les LLM et l'IA appliquée.
-- Création d'une mini application full stack de démonstration : FastAPI (backend)
-  + React (frontend) pour expérimenter une architecture de chatbot.
-
-Règles :
-- Réponds en français par défaut, de manière claire et concise.
-- Si la question ne concerne pas Sébastien, ses projets ou le développement web / IA,
-  réponds normalement mais reste pertinent et utile.
-"""
+try:
+    # Version privée (non committée) si elle existe
+    from .profile_context import PROFILE_CONTEXT  # type: ignore
+except ImportError:
+    # Fallback : version d'exemple publique
+    from .profile_context_example import PROFILE_CONTEXT  # type: ignore
 
 
-# CORS: allow the React frontend (Vite dev server usually runs on port 5173)
+# --- CORS pour le frontend React (Vite sur 5173) ---
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
@@ -43,12 +38,18 @@ app.add_middleware(
 )
 
 
+# --- Modèles Pydantic ---
+
+
 class ChatRequest(BaseModel):
     message: str
 
 
 class ChatResponse(BaseModel):
     reply: str
+
+
+# --- Routes ---
 
 
 @app.get("/health")
@@ -80,6 +81,7 @@ def chat(req: ChatRequest):
             ],
         )
 
+        # Nouveau SDK : texte agrégé via output_text
         reply_text = response.output_text
 
         return ChatResponse(reply=reply_text)

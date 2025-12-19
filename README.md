@@ -114,13 +114,18 @@ http://127.0.0.1:5173
 
 - une gestion d’erreurs réseau simple.
 
+## Aperçu
+
+![Interface du chatbot](docs/assets/chatbot-ui.png)
+
+
 ## Évolutions:
 
 Ce MVP est pensé comme une base pour aller vers un chatbot plus avancé :
 
 - [x] brancher un LLM (OpenAI, etc.) sur l’endpoint /chat
 
-- [ ] externaliser le contexte de profil : profile_context_example.py → version d’exemple, committée.
+- [x] externaliser le contexte de profil : profile_context_example.py → version d’exemple, committée.
 profile_context.py → version privée, non committée (ajoutée à .gitignore).
 
 - [ ] gérer un historique de conversation côté backend

@@ -15,7 +15,7 @@ function App() {
     {
       id: 1,
       author: "bot",
-      text: "Hi, I'm your Chatbot Demo. Ask me something and I'll echo it back (for now).",
+      text: "Bonjour, je suis l’assistant de Sébastien Breton. Que vous recrutiez ou que vous portiez un projet web/IA, je peux vous présenter son profil, ses compétences et discuter de la faisabilité de votre idée.",
     },
   ]);
   const [input, setInput] = useState("");

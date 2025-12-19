@@ -9,3 +9,7 @@ backend/**/*.py[cod]
 # Node / frontend
 frontend/node_modules/
 frontend/dist/
+
+# Contexte perso non versionné
+backend/app/profile_context.py
+    

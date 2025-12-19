@@ -1,13 +1,13 @@
 # Chatbot Demo · FastAPI + React
 
-Mini application **full stack** démontrant un chatbot simple construit avec :
+Mini application **full stack** démontrant un chatbot professionnel construit avec :
 
 - **Backend** : Python 3 · FastAPI · Uvicorn  
 - **Frontend** : React · TypeScript · Vite  
-- **API** : endpoint `/chat` mocké, prêt à être branché sur un LLM (OpenAI, etc.)
+- **API** : endpoint `/chat` connecté à un modèle LLM OpenAI (par défaut `gpt-4.1-nano`), avec possibilité de rester en mode mock si nécessaire.
 
 Ce projet sert de **preuve de concept** pour une architecture de chatbot moderne :  
-un backend Python gère les échanges et la structure des données, tandis qu’un frontend React offre une interface conversationnelle responsive.
+un backend Python gère les échanges, le contexte et l’appel LLM, tandis qu’un frontend React offre une interface conversationnelle responsive, centrée sur la présentation du profil et des projets.
 
 ---
 
@@ -18,9 +18,11 @@ chatbot-demo/
   backend/
     app/
       __init__.py
-      main.py        # FastAPI app (health + /chat)
-    .venv/           # environnement virtuel Python
-    requirements.txt # dépendances Python
+      main.py                    # FastAPI app (health + /chat + appel LLM)
+      profile_context_example.py # Contexte d'exemple (public)
+      # profile_context.py       # Contexte privé, non versionné (optionnel)
+    .venv/                       # environnement virtuel Python (non committé)
+    requirements.txt             # dépendances Python
 
   frontend/
     src/
@@ -41,7 +43,7 @@ chatbot-demo/
 
 - npm (fourni avec Node)
 
-### 2. Backend - FastAPI
+### 2. Backend - FastAPI + LLM
 
 Depuis la racine du projet :
 
@@ -62,6 +64,15 @@ API : http://127.0.0.1:8000
 Healthcheck : http://127.0.0.1:8000/health
 
 Documentation interactive : http://127.0.0.1:8000/docs
+
+#### Configuration LLM
+
+Le backend lit la clé OpenAI dans la variable d’environnement :
+```bash
+export OPENAI_API_KEY="votre_cle_ultra_secrete"
+```
+
+Par défaut, le modèle utilisé est gpt-4.1-nano, configurable dans backend/app/main.py.
 
 ### 3. Frontend · React + Vite
 
@@ -84,12 +95,15 @@ http://127.0.0.1:5173
    ```json
    { "message": "Bonjour" }
    ```
-3. Le backend répond avec une structure typée :
+3. Le backend :
+- construit un prompt à partir du contexte de profil (PROFILE_CONTEXT),
+
+- appelle le modèle LLM (gpt-4.1-nano par défaut),
+
+- renvoie une réponse typée :
 
    ```json
-   {
-     "reply": "Tu as dit : « Bonjour ». (Réponse mockée pour le MVP.)"
-   }
+   {"reply": "Réponse générée par le LLM en fonction du contexte et de la question."} 
    ```
 
 4. L’interface affiche les messages dans un composant de chat centré, avec :
@@ -104,7 +118,10 @@ http://127.0.0.1:5173
 
 Ce MVP est pensé comme une base pour aller vers un chatbot plus avancé :
 
-- [ ] brancher un LLM (OpenAI, etc.) sur l’endpoint /chat
+- [x] brancher un LLM (OpenAI, etc.) sur l’endpoint /chat
+
+- [ ] externaliser le contexte de profil : profile_context_example.py → version d’exemple, committée.
+profile_context.py → version privée, non committée (ajoutée à .gitignore).
 
 - [ ] gérer un historique de conversation côté backend
 
